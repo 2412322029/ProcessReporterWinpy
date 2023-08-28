@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<div>
+    <p id="a1"></p>
+    <p id="a2"></p>
+    <p id="a3"></p>
+</div>
+
+<body>
+    <script>
+        const api = "./api/sendmsg"
+        function toUnicode(theString) {
+            var unicodeString = '';
+            for (var i = 0; i < theString.length; i++) {
+                var theUnicode = theString.charCodeAt(i).toString(16).toUpperCase();
+                while (theUnicode.length < 4) {
+                    theUnicode = '0' + theUnicode;
+                }
+                theUnicode = '\\u' + theUnicode;
+                unicodeString += theUnicode;
+            }
+            return unicodeString;
+        }
+        function tostring(unicode) {
+            return eval("'" + unicode + "'");
+        }
+        function a() {
+            fetch(api)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data);
+                    document.getElementById("a1").innerText = toUnicode(data.programName)
+                    document.getElementById("a2").innerText = tostring(toUnicode(data.windowTitle))
+                    document.getElementById("a3").innerText = data.timestamp
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+        }
+        a()
+        setInterval(() => {
+            a()
+        }, 5000);
+
+    </script>
+</body>
+
+</html>

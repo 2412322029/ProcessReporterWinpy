@@ -1,3 +1,8 @@
 netkeiba.iml
 .idea/
 __pycache__/
+log/
+**/*.exe
+build
+dist
+*.spec
